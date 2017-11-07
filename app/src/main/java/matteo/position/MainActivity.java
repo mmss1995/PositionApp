@@ -169,13 +169,14 @@ public class MainActivity extends AppCompatActivity implements
         Log.d("MainActivity", "Location update received: " + location.getLatitude()+", "+ location.getLongitude());
         mTextView.setText(location.getLatitude()+", "+location.getLongitude()+", "+location.getAltitude());
         RequestQueue queue = Volley.newRequestQueue(this);
-        String url = "https://maps.googleapis.com/maps/api/geocode/json?latlng="+location.getLatitude()+","+location.getLongitude()+"&key=AIzaSyAZDxAezqiQq0VHN7lF3LzmyPhRbILiKIc";
+        String url = "https://maps.googleapis.com/maps/api/geocode/json?latlng="+location.getLatitude()+","+location.getLongitude()+"&key=AIzaSyAHEDkVShpPzHc-PT1P8W-J-k9HjN2CJsA";
         Log.d("url",url);
         JsonObjectRequest request = new JsonObjectRequest(url, null, new Response.Listener<JSONObject>(){
                     @Override
                     public void onResponse(JSONObject response) {
                         // Display the first 500 characters of the response string.
                         try {
+                            Log.d("risposta", response.toString());
                             String address = response.getJSONArray("results").getJSONObject(0).getString("formatted_address");
                             mTextView.append("\n"+address);
                             Log.d("Address", address);
