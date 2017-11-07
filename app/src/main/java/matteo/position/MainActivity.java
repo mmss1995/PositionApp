@@ -9,14 +9,27 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ListView;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements
         GoogleApiClient.ConnectionCallbacks,
@@ -155,5 +168,28 @@ public class MainActivity extends AppCompatActivity implements
     public void onLocationChanged(Location location) {
         Log.d("MainActivity", "Location update received: " + location.getLatitude()+", "+ location.getLongitude());
         mTextView.setText(location.getLatitude()+", "+location.getLongitude()+", "+location.getAltitude());
+        RequestQueue queue = Volley.newRequestQueue(this);
+        String url = "https://maps.googleapis.com/maps/api/geocode/json?latlng="+location.getLatitude()+","+location.getLongitude()+"&key=AIzaSyAZDxAezqiQq0VHN7lF3LzmyPhRbILiKIc";
+        Log.d("url",url);
+        JsonObjectRequest request = new JsonObjectRequest(url, null, new Response.Listener<JSONObject>(){
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        // Display the first 500 characters of the response string.
+                        try {
+                            String address = response.getJSONArray("results").getJSONObject(0).getString("formatted_address");
+                            mTextView.append("\n"+address);
+                            Log.d("Address", address);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+            }
+        });
+        // Add the request to the RequestQueue.
+        queue.add(request);
+
     }
 }
