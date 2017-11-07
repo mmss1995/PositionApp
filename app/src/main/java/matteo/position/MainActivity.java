@@ -154,6 +154,6 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onLocationChanged(Location location) {
         Log.d("MainActivity", "Location update received: " + location.getLatitude()+", "+ location.getLongitude());
-        mTextView.setText(location.getLatitude()+", "+location.getLongitude());
+        mTextView.setText(location.getLatitude()+", "+location.getLongitude()+", "+location.getAltitude());
     }
 }
